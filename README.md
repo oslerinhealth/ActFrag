@@ -1,6 +1,6 @@
 # ActFrag
 
-
+ [![Travis-CI Build Status] (https://travis-ci.org/junruidi/ActFrag.svg?branch=master)] (https://travis-ci.org/junruidi/ActFrag)
 
 Recent studies haven shown that, on top of total daily active/sedentary volumes, the time 
   accumulation strategies provide more sensitive information. This package provides functions to extract 
