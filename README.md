@@ -1,7 +1,7 @@
 # ActFrag
 
  [![Travis-CI Build Status](https://travis-ci.org/junruidi/ActFrag.svg?branch=master)](https://travis-ci.org/junruidi/ActFrag)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/GITHUB_USERNAME/REPO?branch=master&svg=true)](https://ci.appveyor.com/project/GITHUB_USERNAME/REPO)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/junruidi/ActFrag?branch=master&svg=true)](https://ci.appveyor.com/project/junruidi/ActFrag)
 
 Recent studies haven shown that, on top of total daily active/sedentary volumes, the time 
   accumulation strategies provide more sensitive information. This package provides functions to extract 
