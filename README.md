@@ -5,7 +5,7 @@
 
 Recent studies haven shown that, on top of total daily active/sedentary volumes, the time 
   accumulation strategies provide more sensitive information. This package provides functions to extract 
-  commonly used fragmentation metrics to quantidy such time accumulation strategies based on minute level 
+  commonly used fragmentation metrics to quantify such time accumulation strategies based on minute level 
   actigraphy-measured activity counts data. 
 
 ## Install
