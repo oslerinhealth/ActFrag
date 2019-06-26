@@ -53,20 +53,18 @@ In this version, we only incorporate type 3 . For 1 and 2 there are more appropr
 
 
 ## 2. Fragmentation metrics
-In this version, we focus on the fragmentation metrics that describe time accumulation strategy. We have the funcions to calcualte the following features
 
+Frequently, studies extract total time spent in sedentary behavior (e.g., total sedentary minutes per day) or proportion of waking hours spent sedentary. More advanced techniques have examined the effect of replacing sedentary time with active time spent either in light or moderate-vigorous intensity. For example, isotemporal substitution modeling) and compositional data analysis examine the combined effects of time spent sedentary, light and moderate-vigorous activity, and sleep while taking into account the codependence due to finite time during a day. Yet, most studies typically only use total volume of sedentary time while ignoring the potential importance of accumulation patterns. Recent studies have suggested that such patterns (known as prolonged sedentary bouts) may provide additional sensitivity to predict health outcomes and provide additional information beyond total volume of sedentary time. 
 
-### 2.1 fragmentation metrics
+Fragmentation metrics study the accumulation pattern of TST and TAT by quantifying the alternating these sequences via summaries of duration of and fre- quency of switching between sedentary and active bouts. They provide unique translatable insights into accumulation patterns for sedentary and active time and lead to additional findings of associations between those patterns and health outcomes on top of total sedentary volume Here is the list of available fragmentation metrics:
 
-Fragmentation metrics study the accumulation pattern of TST and TAT by quantifying the alternating these sequences via summaries of duration of and fre- quency of switching between sedentary and active bouts. Here is the list of available fragmentation metrics
-
-* average bout duration: bout/minute.
+* average bout duration: bout/minute
 * transition probability: reexpressed as the reciprocal of averge bout durations
 * Gini index: absolute variability normalized to the average bout duration
 * average hazard
-* power law distribution parameter.
+* power law distribution parameter
 
-We can calculate the above mentioned metrics for both sedentary and active bout. [Details about fragmentations](https://www.biorxiv.org/content/early/2017/08/31/182337).
+We can calculate the above mentioned metrics for both sedentary and active bout. Details about fragmentations can be found [here](https://www.biorxiv.org/content/early/2017/08/31/182337).
 
 `fragmentation` and `fragmentation_long` calcualte fragmentation features, (for a single vector amd whole dataset respectively). The argument `metrics`, which consists of "mean_bout", "TP", "Gini", "hazard", "power", and "all" decides which metrics to calcualte. "all" will lead to all metrics.
 

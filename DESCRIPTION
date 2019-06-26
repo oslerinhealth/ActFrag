@@ -13,7 +13,7 @@ Authors@R: c(
 Maintainer: Junrui Di <dijunrui@gmail.com>
 Description: Recent studies haven shown that, on top of total daily active/sedentary volumes, the time 
   accumulation strategies provide more sensitive information. This package provides functions to extract 
-  commonly used fragmentation metrics to quantidy such time accumulation strategies based on minute level 
+  commonly used fragmentation metrics to quantify such time accumulation strategies based on minute level 
   actigraphy-measured activity counts data. 
 License: GPL-3 + file LICENSE
 Imports:
@@ -24,11 +24,10 @@ Imports:
     stats,
     tidyr,
 Depends:
-    R (>= 2.10),
+    R (>= 3.5.0),
 Suggests:
     knitr,
     rmarkdown,
-    covr,
     testthat
 Encoding: UTF-8
 LazyData: TRUE
