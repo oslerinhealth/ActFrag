@@ -53,5 +53,6 @@ frag = fragmentation(x = count1, w = wear1, thresh = 100, bout.length = 1, metri
 
 }
 \references{
-Di et al. Patterns of sedentary and active time accumulation are associated with mortality in US adults: The NHANES study.
+Junrui Di, Andrew Leroux, Jacek Urbanek, Ravi Varadhan, Adam P. Spira, Jennifer Schrack, Vadim Zipunnikov.
+Patterns of sedentary and active time accumulation are associated with mortality in US adults: The NHANES study. bioRxiv 182337; doi: https://doi.org/10.1101/182337
 }

@@ -1,6 +1,6 @@
 Package: ActFrag
 Type: Package
-Title: Activity Fragmentation Metrics Extracted From Minute Level Activity Data
+Title: Activity Fragmentation Metrics Extracted from Minute Level Activity Data
 Version: 0.1.0
 Authors@R: c(
     person(given = "Junrui", family = "Di", 
@@ -15,7 +15,7 @@ Description: Recent studies haven shown that, on top of total daily active/seden
   accumulation strategies provide more sensitive information. This package provides functions to extract 
   commonly used fragmentation metrics to quantify such time accumulation strategies based on minute level 
   actigraphy-measured activity counts data. 
-License: GPL-3 + file LICENSE
+License: GPL-3
 Imports:
     accelerometry,
     dplyr,

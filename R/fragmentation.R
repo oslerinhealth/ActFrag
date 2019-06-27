@@ -29,7 +29,8 @@
 #'
 #' @export
 #'
-#' @references Di et al. Patterns of sedentary and active time accumulation are associated with mortality in US adults: The NHANES study.
+#' @references Junrui Di, Andrew Leroux, Jacek Urbanek, Ravi Varadhan, Adam P. Spira, Jennifer Schrack, Vadim Zipunnikov.
+#' Patterns of sedentary and active time accumulation are associated with mortality in US adults: The NHANES study. bioRxiv 182337; doi: https://doi.org/10.1101/182337
 #'
 #' @details Metrics include
 #' mean_bout (mean bout duration),
@@ -59,7 +60,7 @@ fragmentation = function(
   rm(list = c("value"))
 
   metrics = match.arg(metrics)
-  
+
   if(!is.integer(x)){
     stop("Activity counts has to be integers!")
   }
@@ -74,7 +75,7 @@ fragmentation = function(
   }
 
   uwear = as.integer(unique(c(w)))
-  
+
   if (!all(uwear %in% c(0, 1, NA))) {
     stop("w has non 0-1 data!")
   }
