@@ -22,7 +22,7 @@ Imports:
     ineq,
     survival,
     stats,
-    tidyr,
+    tidyr
 Depends:
     R (>= 3.5.0),
 Suggests:
