@@ -60,7 +60,7 @@
 #' frag_by_day = fragmentation_long(count.data = count,
 #' weartime = wear,thresh = 100,bout.length = 1,
 #' metrics = "all",by = "day")
-#' #' tp_by_subject = fragmentation_long(count.data = count,
+#' tp_by_subject = fragmentation_long(count.data = count,
 #' weartime = wear,thresh = 100,bout.length = 1,
 #' metrics = "TP",by = "subject")
 #'
