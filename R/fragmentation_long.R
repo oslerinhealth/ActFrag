@@ -4,10 +4,10 @@
 #'
 #' @param count.data \code{data.frame} of dimension n*1442 containing the 1440 minutes of activity data for all n subject days.
 #' The first two columns have to be ID and Day. ID can be either \code{character} or \code{numeric}. Day has to be \code{numeric} indicating
-#' the sequencey of days within each subject. 
+#' the sequency of days within each subject.
 #' @param weartime \code{data.frame} with dimension of \code{count.data}.
 #' The first two columns have to be ID and Day.ID can be either \code{character} or \code{numeric}. Day has to be \code{numeric} indicating
-#' the sequencey of days within each subject. 
+#' the sequencey of days within each subject.
 #'
 #' @param thresh threshold to define the two states.
 #' @param bout.length minimum duration of defining an active bout; defaults to 1.
@@ -60,6 +60,9 @@
 #' frag_by_day = fragmentation_long(count.data = count,
 #' weartime = wear,thresh = 100,bout.length = 1,
 #' metrics = "all",by = "day")
+#' #' tp_by_subject = fragmentation_long(count.data = count,
+#' weartime = wear,thresh = 100,bout.length = 1,
+#' metrics = "TP",by = "subject")
 #'
 #'
 
@@ -184,7 +187,7 @@ fragmentation_long = function(
                                      vfrag[seq(10,length(vfrag),10)]))
     }
     if(metrics != "all"){
-      frag_all = as.data.frame(cbind(idlist[,1],
+      frag_all = as.data.frame(cbind(idlist,
                                      vfrag[seq(1,length(vfrag),2)],
                                      vfrag[seq(2,length(vfrag),2)]))
     }

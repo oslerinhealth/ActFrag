@@ -4,8 +4,13 @@
 \alias{fragmentation}
 \title{Fragmentation Metrics}
 \usage{
-fragmentation(x, w, thresh, bout.length = 1, metrics = c("mean_bout",
-  "TP", "Gini", "power", "hazard", "all"))
+fragmentation(
+  x,
+  w,
+  thresh,
+  bout.length = 1,
+  metrics = c("mean_bout", "TP", "Gini", "power", "hazard", "all")
+)
 }
 \arguments{
 \item{x}{\code{integer} \code{vector} of activity data.}

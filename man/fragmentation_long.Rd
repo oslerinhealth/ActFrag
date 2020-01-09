@@ -4,14 +4,19 @@
 \alias{fragmentation_long}
 \title{Fragmentation Metrics for Whole Dataset}
 \usage{
-fragmentation_long(count.data, weartime, thresh, bout.length = 1,
+fragmentation_long(
+  count.data,
+  weartime,
+  thresh,
+  bout.length = 1,
   metrics = c("mean_bout", "TP", "Gini", "power", "hazard", "all"),
-  by = c("day", "subject"))
+  by = c("day", "subject")
+)
 }
 \arguments{
 \item{count.data}{\code{data.frame} of dimension n*1442 containing the 1440 minutes of activity data for all n subject days.
 The first two columns have to be ID and Day. ID can be either \code{character} or \code{numeric}. Day has to be \code{numeric} indicating
-the sequencey of days within each subject.}
+the sequency of days within each subject.}
 
 \item{weartime}{\code{data.frame} with dimension of \code{count.data}.
 The first two columns have to be ID and Day.ID can be either \code{character} or \code{numeric}. Day has to be \code{numeric} indicating
@@ -64,6 +69,9 @@ metrics = "all",by = "subject")
 frag_by_day = fragmentation_long(count.data = count,
 weartime = wear,thresh = 100,bout.length = 1,
 metrics = "all",by = "day")
+#' tp_by_subject = fragmentation_long(count.data = count,
+weartime = wear,thresh = 100,bout.length = 1,
+metrics = "TP",by = "subject")
 
 
 }
