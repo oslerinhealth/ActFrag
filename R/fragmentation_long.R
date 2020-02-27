@@ -36,7 +36,7 @@
 #'
 #' @importFrom stats na.omit reshape
 #' @importFrom dplyr group_by %>%
-#' @importFrom dplyr do as_data_frame filter
+#' @importFrom dplyr do as_tibble filter
 #' @importFrom accelerometry bouts rle2
 #' @importFrom survival survfit Surv
 #' @importFrom ineq Gini

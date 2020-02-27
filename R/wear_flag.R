@@ -23,6 +23,9 @@
 #' data(example_activity_data)
 #' count = example_activity_data$count
 #' weartime = wear_flag(count.data = count)
+#' testthat::expect_error({
+#' weartime = wear_flag(count.data = count, start = "10:00PM")
+#' })
 #'
 #'
 #'
