@@ -51,7 +51,14 @@
 #' frag = fragmentation(x = count1, w = wear1,
 #' thresh = 100, bout.length = 1, metrics = x)
 #' })
-
+#' data(example_activity_data)
+#' count1 = c(t(example_activity_data$count[1,-c(1,2)]))
+#' wear1 = c(t(example_activity_data$wear[1,-c(1,2)]))
+#' count1[ !is.na(count1) & count1 != 0] = 0L
+#' res = sapply(c("mean_bout","TP","Gini","power","hazard", "all"), function(x) {
+#' frag = fragmentation(x = count1, w = wear1,
+#' thresh = 100, bout.length = 1, metrics = x)
+#' })
 fragmentation = function(
   x,
   w,
@@ -87,7 +94,8 @@ fragmentation = function(
   w = na.omit(w)
 
   w[w == 0] = NA
-  y = bouts(counts = x, thresh_lower  = thresh, bout_length = bout.length)
+  y = accelerometry::bouts(counts = x,
+                           thresh_lower  = thresh, bout_length = bout.length)
   yw = y * w
 
   uy = unique(na.omit(yw))

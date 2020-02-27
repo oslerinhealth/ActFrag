@@ -57,15 +57,25 @@
 #' frag_by_day = fragmentation_long(count.data = count,
 #' weartime = wear,thresh = 100,bout.length = 1,
 #' metrics = "all",by = "day")
+
 #' tp_by_subject = fragmentation_long(count.data = count,
 #' weartime = wear,thresh = 100,bout.length = 1,
 #' metrics = "TP",by = "subject")
 #'
+#' \donttest{
+#' res = sapply(c("mean_bout","TP","Gini","power","hazard", "all"), function(x) {
+#' frag_by_day = fragmentation_long(count.data = count,
+#' weartime = wear,thresh = 100,bout.length = 1,
+#' metrics = x,by = "day")
+#' })
+#' res = sapply(c("mean_bout","TP","Gini","power","hazard", "all"), function(x) {
+#' tp_by_subject = fragmentation_long(count.data = count,
+#' weartime = wear,thresh = 100,bout.length = 1,
+#' metrics = x,by = "subject")
+#' })
+#' }
 #'
-
-
-
-
+#'
 fragmentation_long = function(
   count.data,
   weartime,
