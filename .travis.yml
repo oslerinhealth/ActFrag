@@ -1,5 +1,92 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
-language: R
-cache: packages
-warnings_are_errors: true
+language: r
+warnings_are_errors: false
+cache: false
+use_bioc: true
+bioc_required: true
+cran: http://cran.rstudio.com
+dist: trusty
+addons:
+  apt:
+    packages:
+    - libcurl4-openssl-dev
+    - libxml2-dev
+    - libfftw3-dev
+    - libgsl0-dev
+    - libgsl0ldbl
+os:
+- linux
+services:
+- xvfb
+r:
+- release
+env:
+  global:
+  - R_BUILD_ARGS="--no-manual"
+  - R_CHECK_ARGS="--as-cran --install-args=--build"
+  - RGL_USE_NULL=TRUE
+  - WARNINGS_ARE_ERRORS=1
+  - PROJECT_NAME=oslerinhealth
+  - DISPLAY=:99.0
+  - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
+  - _R_CHECK_FORCE_SUGGESTS_=false
+  - secure: DEBqdikty3sj9TyAED7Ag673bJF+a4TU9Vu3Loy9J+wzl9wZuR/qf9Hro+AdSKAhhy5OkF3mllPFwyt+nX0TWvTkfi2iIl9ZzcMWSHIIv46EA8hkRXZ0yXQ+01DzzajeIwcaWbRzdjLJ2A4QoQUrbrtqsvAFsUpaeezmO3H0XcJX3JC49W4HN0VtE0Q8wFU2E7gVbzC0GLabBJEePtEvcNTpERbbc8XVhTJ+sNnXkhSgi01KLW21V7xB6jreJXH8DiJie2egGbHLCul6IKBJZbujFjVDzgnAz0W9ANbjKcmydyTICDkOTOxHDpJlYxAx1tFQCbKN+XJLEZNxyUaFSm3TMi/6N6thplt2l+BiBTOMcbKSMWvMcwIjxlChWbwIHartqGRIbcPG8h07goUDpRemCOskcpAB6nGsJ23eXi20MBada9R3njDBKS1xvEGxnLfVBnppbg1B0fncAu61RpcX/AbBvRxr7IRCuxBaWJjltg29LUO8AVFSQry0zGfEqY709ZTswXjtxMa/GBrd1A7u6XZGK2KrC8xjR7+kxi8FcLm+e6x5wVQPsFbNrCY+r0GPLIKgXzJGLhvPr0niwMHa93pS9c+A3A2W06rB6ddgCFCYU+j1iDZ3LY0VTcN7wVrTJGLLpI0ktLvGgtaO0XdD+XOn6N/GzzEOaF6jj9c=
+before_install:
+- ulimit -n 2048
+- export LD_LIBRARY_PATH=/usr/local/clang/lib:${LD_LIBRARY_PATH}
+- export PROJ_DIR=`basename $PWD`
+- echo "travis_wait*\.log$" >> .Rbuildignore
+- fname=travis_helpers.sh
+- wget -O ${fname} http://bit.ly/travis_helpers
+- cat ${fname}; source ${fname}; rm ${fname}
+- cat DESCRIPTION
+- codename=`linux_codename`;
+- if [ "${codename}" = "trusty" ]; then start_xvfb ; fi
+- jags_install || true;
+- v8_install || true;
+- dcmtk_install || true;
+- gsl_install 2.1 || true ;
+- export rver=`r_version`; echo $rver ;
+- export PACKAGE_NAME=`package_name`
+- export RCHECK_DIR=${PACKAGE_NAME}.Rcheck
+- remove_neuroc_packages
+- export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+- x=`export_clang_cxx`; eval ${x}
+- echo "CC=${CC}, CXX=${CXX}, CXX1X=${CXX1X}"
+- echo "CXX1XSTD=${CXX1XSTD}, CXX11=${CXX11}"
+- clang_cxx
+- export cmake_version="3.11"
+- cmake --version
+- x=`cmake_setup`; echo "${x}"; eval ${x};
+- cmake --version
+- export ants_user=oslerinhealth
+- if [[ "${PACKAGE_NAME}" == "ITKR" || "${PACKAGE_NAME}" == "ANTsRCore" || "${PACKAGE_NAME}"
+  == "ANTsR" ]]; then Rscript -e "install.packages(c('Rcpp', 'RcppEigen'), type =
+  'source', repo = 'http://cran.rstudio.com')" ; fi
+- if [[ "${PACKAGE_NAME}" == "ITKR" || "${PACKAGE_NAME}" == "ANTsRCore" ]]; then export
+  R_BUILD_ARGS="${R_BUILD_ARGS} --no-build-vignettes " ; export R_CHECK_ARGS="--no-vignettes
+  ${R_CHECK_ARGS}" ; fi
+- if [[ "${PACKAGE_NAME}" == "ANTsR" ]]; then export _R_CHECK_FORCE_SUGGESTS_=false
+  ; fi
+- cat DESCRIPTION
+- install_remotes_no_dep
+- cat DESCRIPTION
+- echo $PATH ;
+- install_deps_no_suggests
+- install_python_requirements ;
+- R CMD javareconf ;
+- travis_run_cache
+script:
+- Rscript -e 'install.packages("remotes")'
+- Rscript -e 'remotes::install_github("hadley/pkgdown")'
+- travis_wait 100 Rscript -e 'pkgdown::build_site()'
+after_failure: 
+before_deploy: 
+deploy:
+  provider: pages
+  skip-cleanup: true
+  keep-history: true
+  local-dir: docs
+  on:
+    branch: master
+  github_token: "$GITHUB_TOKEN"
+after_deploy: 

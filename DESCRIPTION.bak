@@ -19,11 +19,7 @@ Description: Recent studies haven shown that, on top of total daily
 License: GPL-3
 Imports: accelerometry, dplyr, ineq, survival, stats, tidyr
 Depends: R (>= 3.5.0),
-Suggests: 
-    knitr,
-    rmarkdown,
-    testthat (>= 2.1.0),
-    covr
+Suggests: knitr, rmarkdown, testthat (>= 2.1.0)
 Encoding: UTF-8
 LazyData: TRUE
 ByteCompile: true
@@ -31,5 +27,4 @@ VignetteBuilder: knitr
 URL: https://github.com/junruidi/ActFrag
 BugReports: https://github.com/junruidi/ActFrag/issues
 RoxygenNote: 7.0.2
-Repository: Oslerinhealth
-biocViews: 
+Remotes:
