@@ -54,8 +54,20 @@ data(example_activity_data)
 count1 = c(t(example_activity_data$count[1,-c(1,2)]))
 wear1 = c(t(example_activity_data$wear[1,-c(1,2)]))
 frag = fragmentation(x = count1, w = wear1, thresh = 100, bout.length = 1, metrics = "mean_bout")
-
-
+frag = fragmentation(x = count1, w = wear1, thresh = 100,
+bout.length = 1, metrics = "all")
+res = sapply(c("mean_bout","TP","Gini","power","hazard"), function(x) {
+frag = fragmentation(x = count1, w = wear1,
+thresh = 100, bout.length = 1, metrics = x)
+})
+data(example_activity_data)
+count1 = c(t(example_activity_data$count[1,-c(1,2)]))
+wear1 = c(t(example_activity_data$wear[1,-c(1,2)]))
+count1[ !is.na(count1) & count1 != 0] = 0L
+res = sapply(c("mean_bout","TP","Gini","power","hazard", "all"), function(x) {
+frag = fragmentation(x = count1, w = wear1,
+thresh = 100, bout.length = 1, metrics = x)
+})
 }
 \references{
 Junrui Di, Andrew Leroux, Jacek Urbanek, Ravi Varadhan, Adam P. Spira, Jennifer Schrack, Vadim Zipunnikov.

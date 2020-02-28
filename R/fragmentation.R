@@ -22,7 +22,7 @@
 #' \item{alpha_a}{power law parameter for active bout}
 #'
 #' @importFrom stats na.omit reshape
-#' @importFrom dplyr %>% as_data_frame filter
+#' @importFrom dplyr %>% as_tibble filter
 #' @importFrom accelerometry bouts rle2
 #' @importFrom survival survfit Surv
 #' @importFrom ineq Gini
@@ -45,10 +45,20 @@
 #' count1 = c(t(example_activity_data$count[1,-c(1,2)]))
 #' wear1 = c(t(example_activity_data$wear[1,-c(1,2)]))
 #' frag = fragmentation(x = count1, w = wear1, thresh = 100, bout.length = 1, metrics = "mean_bout")
-#'
-#'
-
-
+#' frag = fragmentation(x = count1, w = wear1, thresh = 100,
+#' bout.length = 1, metrics = "all")
+#' res = sapply(c("mean_bout","TP","Gini","power","hazard"), function(x) {
+#' frag = fragmentation(x = count1, w = wear1,
+#' thresh = 100, bout.length = 1, metrics = x)
+#' })
+#' data(example_activity_data)
+#' count1 = c(t(example_activity_data$count[1,-c(1,2)]))
+#' wear1 = c(t(example_activity_data$wear[1,-c(1,2)]))
+#' count1[ !is.na(count1) & count1 != 0] = 0L
+#' res = sapply(c("mean_bout","TP","Gini","power","hazard", "all"), function(x) {
+#' frag = fragmentation(x = count1, w = wear1,
+#' thresh = 100, bout.length = 1, metrics = x)
+#' })
 fragmentation = function(
   x,
   w,
@@ -84,7 +94,8 @@ fragmentation = function(
   w = na.omit(w)
 
   w[w == 0] = NA
-  y = bouts(counts = x, thresh_lower  = thresh, bout_length = bout.length)
+  y = accelerometry::bouts(counts = x,
+                           thresh_lower  = thresh, bout_length = bout.length)
   yw = y * w
 
   uy = unique(na.omit(yw))
@@ -126,7 +137,7 @@ fragmentation = function(
 
 
   if (length(uy) > 1) {
-  mat = as_data_frame(rle2(yw)) %>%
+  mat = as_tibble(rle2(yw)) %>%
     filter(!is.na(value))
 
   A = mat$length[which(mat$value == 1)]
