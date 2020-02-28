@@ -1,6 +1,6 @@
 language: r
-warnings_are_errors: false
-cache: false
+cache: packages
+warnings_are_errors: true
 use_bioc: true
 bioc_required: true
 cran: http://cran.rstudio.com
@@ -8,85 +8,82 @@ dist: trusty
 addons:
   apt:
     packages:
-    - libcurl4-openssl-dev
-    - libxml2-dev
     - libfftw3-dev
     - libgsl0-dev
     - libgsl0ldbl
+    - jags
 os:
 - linux
+- osx
+osx_image: xcode9.4
 services:
 - xvfb
 r:
+- 3.3
+- 3.4
+- 3.5
 - release
+- devel
+matrix:
+  allow_failures:
+  - r: devel
 env:
   global:
-  - R_BUILD_ARGS="--no-manual"
-  - R_CHECK_ARGS="--as-cran --install-args=--build"
   - RGL_USE_NULL=TRUE
-  - WARNINGS_ARE_ERRORS=1
   - PROJECT_NAME=oslerinhealth
   - DISPLAY=:99.0
-  - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
-  - _R_CHECK_FORCE_SUGGESTS_=false
-  - secure: DEBqdikty3sj9TyAED7Ag673bJF+a4TU9Vu3Loy9J+wzl9wZuR/qf9Hro+AdSKAhhy5OkF3mllPFwyt+nX0TWvTkfi2iIl9ZzcMWSHIIv46EA8hkRXZ0yXQ+01DzzajeIwcaWbRzdjLJ2A4QoQUrbrtqsvAFsUpaeezmO3H0XcJX3JC49W4HN0VtE0Q8wFU2E7gVbzC0GLabBJEePtEvcNTpERbbc8XVhTJ+sNnXkhSgi01KLW21V7xB6jreJXH8DiJie2egGbHLCul6IKBJZbujFjVDzgnAz0W9ANbjKcmydyTICDkOTOxHDpJlYxAx1tFQCbKN+XJLEZNxyUaFSm3TMi/6N6thplt2l+BiBTOMcbKSMWvMcwIjxlChWbwIHartqGRIbcPG8h07goUDpRemCOskcpAB6nGsJ23eXi20MBada9R3njDBKS1xvEGxnLfVBnppbg1B0fncAu61RpcX/AbBvRxr7IRCuxBaWJjltg29LUO8AVFSQry0zGfEqY709ZTswXjtxMa/GBrd1A7u6XZGK2KrC8xjR7+kxi8FcLm+e6x5wVQPsFbNrCY+r0GPLIKgXzJGLhvPr0niwMHa93pS9c+A3A2W06rB6ddgCFCYU+j1iDZ3LY0VTcN7wVrTJGLLpI0ktLvGgtaO0XdD+XOn6N/GzzEOaF6jj9c=
+r_check_args: "--as-cran --install-args=--build"
 before_install:
 - ulimit -n 2048
-- export LD_LIBRARY_PATH=/usr/local/clang/lib:${LD_LIBRARY_PATH}
 - export PROJ_DIR=`basename $PWD`
-- echo "travis_wait*\.log$" >> .Rbuildignore
 - fname=travis_helpers.sh
 - wget -O ${fname} http://bit.ly/travis_helpers
 - cat ${fname}; source ${fname}; rm ${fname}
 - cat DESCRIPTION
 - codename=`linux_codename`;
 - if [ "${codename}" = "trusty" ]; then start_xvfb ; fi
+- export rver=`r_version`; echo $rver ;
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then no_open_mp ; fi
 - jags_install || true;
 - v8_install || true;
 - dcmtk_install || true;
 - gsl_install 2.1 || true ;
-- export rver=`r_version`; echo $rver ;
-- export PACKAGE_NAME=`package_name`
-- export RCHECK_DIR=${PACKAGE_NAME}.Rcheck
 - remove_neuroc_packages
-- export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
-- x=`export_clang_cxx`; eval ${x}
-- echo "CC=${CC}, CXX=${CXX}, CXX1X=${CXX1X}"
-- echo "CXX1XSTD=${CXX1XSTD}, CXX11=${CXX11}"
-- clang_cxx
-- export cmake_version="3.11"
-- cmake --version
-- x=`cmake_setup`; echo "${x}"; eval ${x};
-- cmake --version
-- export ants_user=oslerinhealth
-- if [[ "${PACKAGE_NAME}" == "ITKR" || "${PACKAGE_NAME}" == "ANTsRCore" || "${PACKAGE_NAME}"
-  == "ANTsR" ]]; then Rscript -e "install.packages(c('Rcpp', 'RcppEigen'), type =
-  'source', repo = 'http://cran.rstudio.com')" ; fi
-- if [[ "${PACKAGE_NAME}" == "ITKR" || "${PACKAGE_NAME}" == "ANTsRCore" ]]; then export
-  R_BUILD_ARGS="${R_BUILD_ARGS} --no-build-vignettes " ; export R_CHECK_ARGS="--no-vignettes
-  ${R_CHECK_ARGS}" ; fi
-- if [[ "${PACKAGE_NAME}" == "ANTsR" ]]; then export _R_CHECK_FORCE_SUGGESTS_=false
-  ; fi
 - cat DESCRIPTION
 - install_remotes_no_dep
 - cat DESCRIPTION
-- echo $PATH ;
-- install_deps_no_suggests
+- export PACKAGE_NAME=`package_name`
+- echo "Package Name is $PACKAGE_NAME"
 - install_python_requirements ;
-- R CMD javareconf ;
-- travis_run_cache
-script:
-- Rscript -e 'install.packages("remotes")'
-- Rscript -e 'remotes::install_github("hadley/pkgdown")'
-- travis_wait 100 Rscript -e 'pkgdown::build_site()'
-after_failure: 
-before_deploy: 
+after_success:
+- cat ${PACKAGE_NAME}.Rcheck/00install.out
+- cat ${PACKAGE_NAME}.Rcheck/00check.log
+after_failure:
+- cat ${PACKAGE_NAME}.Rcheck/00install.out
+- cat ${PACKAGE_NAME}.Rcheck/00check.log
+before_deploy:
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then PKG_TARBALL=$(ls -1t *.tgz | head -n 1);
+  PKG_TARBALL_WITH_R=`echo $PKG_TARBALL | sed 's/.tgz/_'"R${rver}"'.tgz/'` ; mv ${PKG_TARBALL}
+  ${PKG_TARBALL_WITH_R} ; echo "Built tarball is ${PKG_TARBALL_WITH_R}" ; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then PKG_TARBALL=$(ls -1t *.tar.gz | head -n
+  1); PKG_TARBALL_WITH_R=`echo $PKG_TARBALL | sed 's/.tar.gz/_'"R${rver}"'.tar.gz/'`
+  ; mv ${PKG_TARBALL} ${PKG_TARBALL_WITH_R} ; echo "Built tarball is ${PKG_TARBALL_WITH_R}"
+  ; fi
+- if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then rm -f *.tar.gz; fi
 deploy:
-  provider: pages
-  skip-cleanup: true
-  keep-history: true
-  local-dir: docs
+  provider: releases
+  skip_cleanup: true
+  file_glob: true
+  file: "${PACKAGE_NAME}*.t*gz"
   on:
-    branch: master
-  github_token: "$GITHUB_TOKEN"
-after_deploy: 
+    tags: true
+  api-key:
+    secure: j0r/WX/erUrHKuofX3pAvtXOYivmd5ZxDk7PGcbjgkZnRyEgbko4kauJQXvJob6ud7MdxAPRje26rwMzqYDLA5HP2LVZi/B/xGl1bKN84Zs8mazXCrpfNSf3xqWfD7dc2f/NefHuw+GQKbxiJc5eJYT9xMfxy1/4zeV/8JfGSlq2TCl27XjZEhmmCUlYvHXNsPjDn23H9aTZFLEQZOKovxgujRXtuRBulUgxM5PizTmevI5rpw3gGacBR6bibl56Uw2ODSLA2fCbCiF6KIxhsCjjQImpxR4aI5EuP93Y8WKFEO2Z10amxOXJb+/tA2l0yNlHBZqZIfr5O8h/ouUWLGOYPxSCn0qviDdxhdqTOBzRW+DiOatLaU1E4JGrq36spu7Mm22G7cy35AVRkv1JYrdvg0uGAlBP80wB8im0bCew/oZarm+xsYqNWGW6GVVG9ism0ninMyOCTjEww308JOtd3cdQiKwW5FDVPjlngbu9bLLBeWizGS3HPwr3gqNzpIlzcYG6Hj57J1/2hMrz5lkoqXBtxSVccyu2HDvNOqIgUrx6su0nX33nTRU6rROd5pmBu+q+lRzn9WHl4gCda/Grmt0S1UhVEYBfJcN0tuLaUqfKWkLleyajJTqcRPwYr0qnGQuQjl0ppXhuiJJeCVyJlp3AGpQbCcNZ4p8+X2k=
+after_deploy:
+- echo "${PROJECT_NAME}" | grep -q "releases"; if [[ $? -eq 0 ]]; then run_coverage="false";
+  else run_coverage=; fi;
+- if [[ "${TRAVIS_OS_NAME}" == "linux" && ${TRAVIS_R_VERSION_STRING} = "release" &&
+  -z "${run_coverage}" ]]; then echo 'covr::coveralls(type = "all", quiet = FALSE)'
+  > osler_covr.R ; travis_wait 100 Rscript osler_covr.R ; rm osler_covr.R ; fi
+
+#neuroc.deps version (SHA): a5aa5ca
